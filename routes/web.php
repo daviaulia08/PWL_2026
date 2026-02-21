@@ -2,21 +2,24 @@
 
 use Illuminate\Support\Facades\Route; 
 
+Route::middleware(['first', 'second'])->group(function () {
+    Route::get('/', function () {
+        // Uses first & second Middleware
+    });
+
 Route::get('/user/profile', function () {
-    //
-})->name('profile');
+        // Uses first & second Middleware
+    });
+});
 
-Route::get(
-    '/user/profile',
-    [UserProfileController::class, 'show']
-)->name('profile');
+Route::domain('{account}.example.com')->group (function () {
+    Route::get('user/{id}', function ($account, $id) {
+        //
+    });
+});
 
-// Generating URLs..
-$url = route('profile');
-
-// Generating Redirects...
-return redirect()->route('profile');
-
-
-
-
+Route::middleware('auth')->group (function () {
+    Route::get('/user', [UserController::class, 'index']);
+    Route::get('/post', [PostController::class, 'index']);        
+    Route::get('/event', [EventController::class, 'index']);
+});
